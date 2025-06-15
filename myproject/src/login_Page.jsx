@@ -1,6 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import logo from "./logo_no_background.png";
+import {useNavigate} from "react-router-dom";
+
 
 function Login() {
   const {
@@ -8,10 +10,28 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
+  
 
   const onSubmit = (data) => {
+    const storedUser = JSON.parse(localStorage.getItem("User") || "{}")
+
     console.log("Login Data:", data);
-    // TODO: Add authentication logic here
+    console.log(storedUser);
+
+    if(
+      data.Email === storedUser.Email &&
+      data.Password === storedUser.Password
+    ){
+      alert("Login Successful!");
+      navigate("/Homepage")
+    }else{
+      alert("Invalid Credentials")
+    }
+
+    navigate("/");
+
+    
   };
 
   return (

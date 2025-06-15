@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import logo from "./logo_no_background.png";
+import {useNavigate} from "react-router-dom"
 
 function Register() {
   const {
@@ -9,15 +10,19 @@ function Register() {
     watch,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   const onSubmit = (data) => {
+    localStorage.setItem("use", JSON.stringify(data));
+    alert("Registered successfully!");
     if (data.password !== data.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
     console.log("Registered Data:", data);
-    // Proceed with registration logic
+    navigate("/Login")
+    
   };
 
   return (

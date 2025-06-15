@@ -1,131 +1,163 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Search, ShoppingCart, User } from "lucide-react";
+import { useForm } from "react-hook-form";
+import {useNavigate} from "react-router-dom";
 
 export default function HomePage() {
   const navigate = useNavigate();
-
-  const featuredBooks = [
-    {
-      title: "Atomic Habits",
-      description: "A proven framework for building better habits by James Clear.",
-      image: "/atomichabits.webp",
-      price: "$12.99",
-    },
-    {
-      title: "Sapiens",
-      description: "Yuval Noah Harari's groundbreaking narrative of human history.",
-      image: "/Sapiens__A_Brief_History_of_Humankind.jpg",
-      price: "$15.99",
-    },
-    {
-      title: "The Alchemist",
-      description: "A philosophical story about pursuing your dreams by Paulo Coelho.",
-      image: "/alchemist.jpeg",
-      price: "$10.49",
-    },
-    {
-      title: "1984",
-      description: "George Orwell’s chilling dystopian classic about surveillance and control.",
-      image: "/eight-four.jpg",
-      price: "$9.99",
-    },
-
-    
-    {
-      title: "The Subtle Art of Not Giving a F*ck",
-      image: "\subtle_art.jpeg",
-      price: "$11.99"
-    },
-    {
-      title: "Harry Potter and the Sorcerer's Stone",
-      image: "\hpotter.jpg",
-      price: "$13.49"
-    },
-    {
-      title: "The Psychology of Money",
-      image: "\psychology-of-money.jpg",
-      price: "$14.25"
-    },
-    {
-      title: "To Kill a Mockingbird",
-      image: "\mocking.jpg",
-      price: "$9.59"
-    },
-    {
-      title: "The Hobbit",
-      image: "\hbbit.jpg",
-      price: "$12.30"
-    },
-    {
-      title: "Thinking, Fast and Slow",
-      image: "\thinking_fast.webp",
-      price: "$13.00"
-    },
-    {
-      title: "Educated",
-      image: "\edu.webp",
-      price: "$11.75"
-    },
-    {
-      title: "Rich Dad Poor Dad",
-      image: "\rich.jpg",
-      price: "$10.90"
-    },
-    {
-      title: "Ikigai",
-      image: "\ikigai.webp",
-      price: "$8.99"
-    },
-    {
-      title: "The Power of Now",
-      image: "\power.jpg",
-      price: "$9.89"
-    },
-  ];
-
-
-
   return (
-    <div className="min-h-screen bg-gray-900 text-white" style={{ width: "100vw", overflowX: "hidden" }}>
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-gray-800 shadow-md">
-        <div className="flex items-center space-x-3">
-          <h1 className="text-2xl font-bold">KitaabCart</h1>
-          <img src="\src\logo_no_background.png" alt="Logo" className="w-10 h-10 rounded-full object-cover" />
+    <div className="bg-[#f7f1e8] min-h-screen text-gray-900">
+      {/* Navbar */}
+      <nav className="flex justify-between items-center px-10 py-6">
+        <div className="flex space-x-6 text-sm font-medium">
+          <a href="#">Home</a>
+          <a href="#">Store</a>
+          <a href="#">About us</a>
+          <a href="#">Blog</a>
         </div>
-        <input
-          type="text"
-          placeholder="Search for the book you want and read it now..."
-          className="w-1/2 px-4 py-2 rounded bg-gray-700 placeholder-gray-400 focus:outline-none"
-        />
+        <div className="flex items-center space-x-2 text-xl font-semibold">
+          <span>KitaabCart</span>
+          <img src="\src\logo_no_background.png" alt="Logo" className="w-8 h-8" />
+        </div>
         <div className="flex items-center space-x-4">
-          <button onClick={() => alert("No notifications")} className="bg-gray-700 p-2 rounded">Notifications</button>
-          <button onClick={() => navigate("/register")} className="bg-gray-700 p-2 rounded">Register</button>
-          <button onClick={() => navigate("/login")} className="bg-gray-700 p-2 rounded">Login</button>
+          <Search className="w-5 h-5" />
+          <ShoppingCart className="w-5 h-5" />
+          <User className="w-5 h-5" />
         </div>
-      </header>
+        <div className="flex items-center space-x-4">
+  <button onClick={() => alert("No notifications")} 
+  className="p-2 rounded border border-black text-black bg-transparent hover:bg-black hover:text-white transition">
+    Notifications
+  </button>
+  <button
+    onClick={() => navigate("/register")}
+    className="p-2 rounded border border-black text-black bg-transparent hover:bg-black hover:text-white transition"
+  >
+    Register
+  </button>
+  <button
+    onClick={() => navigate("/login")}
+    className="p-2 rounded border border-black text-black bg-transparent hover:bg-black hover:text-white transition"
+  >
+    Login
+  </button>
+</div>
+      </nav>
 
-      {/* Main Content */}
-      <main className="px-6 py-8">
-        <h2 className="text-2xl font-semibold mb-6">Featured Books</h2>
-        <section className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          {featuredBooks.map((book, index) => (
-            <div key={index} className="bg-gray-800 p-4 rounded shadow flex flex-col items-center">
-              <img
-                src={book.image}
-                alt={book.title}
-                className="w-full h-48 object-cover mb-4 rounded"
-              />
-              <h2 className="text-lg font-bold mb-1 text-center">{book.title}</h2>
-              <p className="text-sm text-gray-400 mb-2 text-center">{book.description}</p>
-              <p className="text-base font-semibold mb-2">{book.price}</p>
-              <button className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1 rounded text-sm">
-                Add to Cart
+      {/* Hero Section */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-10 px-10 py-16 items-center">
+        <div>
+          <h1 className="text-5xl font-bold leading-tight mb-4">
+            Experience our <br /> New Exclusive Books
+          </h1>
+          <p className="mb-6 text-gray-600">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incididunt ut labore et dolore Ut enim ad.
+          </p>
+          <button className="bg-[#a58f68] text-white px-4 py-2 rounded hover:bg-[#8b7755]">Shop Now</button>
+        </div>
+        <div className="relative w-full h-full flex justify-center items-end">
+          <div className="relative w-[300px] h-[300px]">
+            <img src="\src\girl_reading.jpg" alt="Books Stack" className="absolute bottom-0 left-0 w-[240px] z-0" />
+            <img src="\src\stack.jpg" alt="Girl Reading" className="absolute bottom-0 right-0 w-[260px] z-10" />
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="bg-white mx-10 my-10 rounded-xl shadow-md py-6 grid grid-cols-1 md:grid-cols-3 text-center text-sm">
+        <div>
+          <div className="font-semibold text-lg mb-1">Certified</div>
+          <p className="text-gray-500">Available certificates of the authority</p>
+        </div>
+        <div>
+          <div className="font-semibold text-lg mb-1">Secure</div>
+          <p className="text-gray-500">Secure certificates of the authority</p>
+        </div>
+        <div>
+          <div className="font-semibold text-lg mb-1">Shipping</div>
+          <p className="text-gray-500">Free, fast, and reliable worldwide</p>
+        </div>
+      </section>
+
+      {/* Popular Books */}
+      <section className="px-10 pb-16">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Our Popular Books</h2>
+          <a href="#" className="text-sm underline">See all</a>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[
+            {
+              title: "All Of Twenty Nine",
+              price: "$65.99",
+              rating: 4,
+              image: "/all.jpg",
+            },
+            {
+              title: "Scholar Select",
+              price: "$45.99",
+              rating: 5,
+              image: "/booktwo.jpg",
+            },
+            {
+              title: "A Short History Of English",
+              price: "$55.99",
+              rating: 4,
+              image: "/history.jpg",
+            },
+            {
+              title: "Atomic Habits",
+              price: "$39.99",
+              rating: 5,
+              image: "/atomichabits.webp",
+            },
+            {
+              title: "Sapiens",
+              price: "$49.99",
+              rating: 5,
+              image: "/Sapiens__A_Brief_History_of_Humankind.jpg",
+            },
+            {
+              title: "To Kill a Mockingbird",
+              price: "$42.99",
+              rating: 4,
+              image: "/mocking.jpg",
+            },
+            {
+              title: "The Subtle Art of Not Giving a F*ck",
+              price: "$44.99",
+              rating: 4,
+              image: "/subtle_art.jpeg",
+            },
+            {
+              title: "Ikigai",
+              price: "$34.99",
+              rating: 5,
+              image: "/ikigai.webp",
+            },
+            {
+              title: "The Alchemist",
+              price: "$39.99",
+              rating: 5,
+              image: "/alchemist.jpeg",
+            }
+          ].map((book, index) => (
+            <div key={index} className="bg-[#e5dac6] p-4 rounded-xl shadow-md">
+              <img src={book.image} alt={book.title} className="w-full h-56 object-cover rounded-md mb-4" />
+              <h3 className="text-lg font-semibold">{book.title}</h3>
+              <p className="text-sm text-gray-600">By From Wilde</p>
+              <div className="text-yellow-500 my-1">
+                {"★".repeat(book.rating)}
+                {"☆".repeat(5 - book.rating)}
+              </div>
+              <p className="text-md font-bold">{book.price}</p>
+              <button className="w-full mt-2 border border-gray-400 rounded px-4 py-2 hover:bg-gray-100">
+                ADD TO CART +
               </button>
             </div>
           ))}
-        </section>
-      </main>
+        </div>
+      </section>
     </div>
   );
 }
