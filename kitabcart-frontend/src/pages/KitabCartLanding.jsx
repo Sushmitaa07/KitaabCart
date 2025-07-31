@@ -340,7 +340,7 @@ const KitabCartLanding = () => {
             }`}
           >
             <Link 
-              to="/catalog" 
+              to="/books" 
               className="bg-gray-800 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
             >
               View All Books
