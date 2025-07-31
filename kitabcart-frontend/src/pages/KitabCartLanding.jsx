@@ -78,7 +78,7 @@ const KitabCartLanding = () => {
 
   // Handle book click to show details
   const handleBookClick = (bookId) => {
-    navigate(`/book/${bookId}`);
+    navigate(`/books/${bookId}`);
   };
 
   const features = [
@@ -259,7 +259,7 @@ const KitabCartLanding = () => {
               {popularBooks.map((book, index) => (
                                  <div 
                    key={book.id} 
-                   className={`group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 hover:scale-105 book-card ${
+                   className={`group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 hover:scale-105 book-card cursor-pointer ${
                      isVisible.popular 
                        ? 'opacity-100 translate-y-0' 
                        : 'opacity-0 translate-y-20'
@@ -267,6 +267,7 @@ const KitabCartLanding = () => {
                    style={{
                      transitionDelay: isVisible.popular ? `${index * 150}ms` : '0ms'
                    }}
+                   onClick={() => handleBookClick(book.id)}
                  >
                   <div className="relative overflow-hidden rounded-t-xl">
                     <img 
@@ -292,20 +293,23 @@ const KitabCartLanding = () => {
                      </div>
                      <div className="mt-auto book-actions">
                        <div className="flex items-center justify-between mb-3">
-                         <div className="flex items-center space-x-2">
-                           <span className="text-xl font-bold text-gray-900">${book.price}</span>
-                           <span className="text-sm text-gray-500 line-through">${(book.price * 1.2).toFixed(2)}</span>
-                         </div>
+                                                   <div className="flex items-center space-x-2">
+                            <span className="text-xl font-bold text-gray-900">Rs. {book.price}</span>
+                            <span className="text-sm text-gray-500 line-through">Rs. {(book.price * 1.2).toFixed(2)}</span>
+                          </div>
                        </div>
-                       <button 
-                         onClick={() => handleAddToCart(book.id)}
-                         disabled={cartLoading[book.id]}
-                         className={`w-full bg-gray-800 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 ${
-                           cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
-                         }`}
-                       >
-                         {cartLoading[book.id] ? 'Adding...' : 'Add to Cart'}
-                       </button>
+                                               <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(book.id);
+                          }}
+                          disabled={cartLoading[book.id]}
+                          className={`w-full bg-gray-800 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 ${
+                            cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
+                        >
+                          {cartLoading[book.id] ? 'Adding...' : 'Add to Cart'}
+                        </button>
                      </div>
                    </div>
                 </div>
@@ -355,7 +359,7 @@ const KitabCartLanding = () => {
                 {bestSellingBooks.map((book, index) => (
                                      <div 
                      key={book.id} 
-                     className={`flex-none w-64 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 hover:scale-105 book-card ${
+                     className={`flex-none w-64 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 hover:scale-105 book-card cursor-pointer ${
                        isVisible.bestsellers 
                          ? 'opacity-100 translate-x-0' 
                          : 'opacity-0 translate-x-20'
@@ -363,6 +367,7 @@ const KitabCartLanding = () => {
                      style={{
                        transitionDelay: isVisible.bestsellers ? `${index * 200}ms` : '0ms'
                      }}
+                     onClick={() => handleBookClick(book.id)}
                    >
                     <div className="relative overflow-hidden rounded-t-xl">
                       <img 
@@ -383,18 +388,21 @@ const KitabCartLanding = () => {
                          <p className="text-sm text-green-600 font-medium mb-3">In Stock</p>
                        </div>
                        <div className="mt-auto">
-                         <div className="flex items-center justify-between mb-3">
-                           <span className="text-xl font-bold text-gray-900">${book.price}</span>
-                         </div>
-                         <button 
-                           onClick={() => handleAddToCart(book.id)}
-                           disabled={cartLoading[book.id]}
-                           className={`w-full bg-red-500 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 ${
-                             cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
-                           }`}
-                         >
-                           {cartLoading[book.id] ? 'Adding...' : 'Buy Now'}
-                         </button>
+                                                   <div className="flex items-center justify-between mb-3">
+                            <span className="text-xl font-bold text-gray-900">Rs. {book.price}</span>
+                          </div>
+                                                   <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddToCart(book.id);
+                            }}
+                            disabled={cartLoading[book.id]}
+                            className={`w-full bg-red-500 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 ${
+                              cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                          >
+                            {cartLoading[book.id] ? 'Adding...' : 'Buy Now'}
+                          </button>
                        </div>
                      </div>
                   </div>
