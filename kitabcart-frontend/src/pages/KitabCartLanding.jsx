@@ -2,16 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LatestCollections from '../components/LatestCollections';
 import Reviews from '../components/Reviews';
+import { bookService, cartService } from '../services/api';
 
 const KitabCartLanding = () => {
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState({});
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [cartLoading, setCartLoading] = useState({});
 
   // Handle scroll effects
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Fetch books from API
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setLoading(true);
+        const response = await bookService.getPublicBooks();
+        setBooks(response.data || []);
+      } catch (error) {
+        console.error('Error fetching books:', error);
+        setBooks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
   }, []);
 
   // Intersection Observer for scroll animations
@@ -36,6 +58,22 @@ const KitabCartLanding = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  // Handle add to cart
+  const handleAddToCart = async (bookId) => {
+    try {
+      setCartLoading(prev => ({ ...prev, [bookId]: true }));
+      await cartService.addToCart(bookId, 1);
+      
+      // Show success message
+      alert('Book added to cart successfully!');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('Failed to add book to cart. Please try again.');
+    } finally {
+      setCartLoading(prev => ({ ...prev, [bookId]: false }));
+    }
+  };
 
   const features = [
     {
@@ -76,96 +114,16 @@ const KitabCartLanding = () => {
     }
   ];
 
-  const popularBooks = [
-    {
-      id: 1,
-      title: "The Midnight Library",
-      author: "Matt Haig",
-      price: "$15.99",
-      originalPrice: "$19.99",
-      image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop",
-      rating: 4.8,
-      badge: "Bestseller"
-    },
-    {
-      id: 2,
-      title: "Atomic Habits",
-      author: "James Clear",
-      price: "$18.99",
-      originalPrice: "$24.99",
-      image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=300&h=400&fit=crop",
-      rating: 4.9,
-      badge: "Popular"
-    },
-    {
-      id: 3,
-      title: "The Psychology of Money",
-      author: "Morgan Housel",
-      price: "$16.99",
-      originalPrice: "$21.99",
-      image: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=300&h=400&fit=crop",
-      rating: 4.7,
-      badge: "Trending"
-    },
-    {
-      id: 4,
-      title: "Dune",
-      author: "Frank Herbert",
-      price: "$14.99",
-      originalPrice: "$18.99",
-      image: "https://images.unsplash.com/photo-1518373714866-3f1478910cc0?w=300&h=400&fit=crop",
-      rating: 4.6,
-      badge: "Classic"
-    }
-  ];
-
-  const bestSellingBooks = [
-    {
-      id: 1,
-      title: "Fourth Wing",
-      author: "Rebecca Yarros",
-      price: "$19.99",
-      image: "https://i.pinimg.com/1200x/a9/99/2c/a9992ca0b0b9b5a294b72859458befac.jpg",
-      sales: "50,000+ sold"
-    },
-    {
-      id: 2,
-      title: "Tomorrow, and Tomorrow",
-      author: "Gabrielle Zevin",
-      price: "$17.99",
-      image: "https://i.pinimg.com/1200x/3a/5f/74/3a5f74812b5123b84a23d9d1ff467736.jpg",
-      sales: "45,000+ sold"
-    },
-    {
-      id: 3,
-      title: "The Seven Moons",
-      author: "Alex Michaelides",
-      price: "$16.99",
-      image: "https://i.pinimg.com/736x/12/c7/e8/12c7e82dd050fe439ec4d63b1801fa9a.jpg",
-      sales: "40,000+ sold"
-    },
-    {
-      id: 4,
-      title: "Project Hail Mary",
-      author: "Andy Weir",
-      price: "$18.99",
-      image: "https://i.pinimg.com/736x/02/7f/04/027f0492acffc1c31af8fe0f948c4e1f.jpg",
-      sales: "38,000+ sold"
-    },
-    {
-      id: 5,
-      title: "The Silent Patient",
-      author: "Alex Michaelides",
-      price: "$15.99",
-      image: "https://i.pinimg.com/1200x/50/20/2b/50202bdc052d718bc6bd7bcfeceb791d.jpg",
-      sales: "35,000+ sold"
-    }
-  ];
-
   const categories = [
     'Fiction', 'Non-Fiction', 'Science', 'Technology', 'History', 'Biography', 
     'Romance', 'Mystery', 'Fantasy', 'Self-Help', 'Business', 'Academic'
   ];
+
+  // Get first 4 books for popular section
+  const popularBooks = books.slice(0, 4);
+  
+  // Get next 5 books for bestsellers section
+  const bestSellingBooks = books.slice(4, 9);
 
   return (
     <div className="min-h-screen">
@@ -216,7 +174,7 @@ const KitabCartLanding = () => {
               <div className="grid grid-cols-3 gap-6 animate-fadeInUp" style={{animationDelay: '1.2s'}}>
                 <div className="text-center group cursor-pointer transform hover:scale-110 transition-all duration-300">
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
-                    <div className="text-4xl font-bold text-gray-800 group-hover:text-gray-900 transition-colors">10K+</div>
+                    <div className="text-4xl font-bold text-gray-800 group-hover:text-gray-900 transition-colors">{books.length}+</div>
                     <div className="text-gray-700 group-hover:text-gray-800 transition-colors">Books Available</div>
                   </div>
                 </div>
@@ -254,7 +212,7 @@ const KitabCartLanding = () => {
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-black/80 to-black/60 text-white p-6 rounded-b-3xl">
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-sm font-medium">10,000+ Books Available</div>
+                        <div className="text-sm font-medium">{books.length}+ Books Available</div>
                         <div className="text-xs text-gray-300">New arrivals every week</div>
                       </div>
                       <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-4 py-2 rounded-full text-sm font-bold hover:from-yellow-300 hover:to-orange-300 transition-all duration-300 cursor-pointer transform hover:scale-110">
@@ -285,61 +243,81 @@ const KitabCartLanding = () => {
             <p className="text-xl text-gray-600">Discover what everyone's reading right now</p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {popularBooks.map((book, index) => (
-              <div 
-                key={book.id} 
-                className={`group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 hover:scale-105 ${
-                  isVisible.popular 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-20'
-                }`}
-                style={{
-                  transitionDelay: isVisible.popular ? `${index * 150}ms` : '0ms'
-                }}
-              >
-                <div className="relative overflow-hidden rounded-t-xl">
-                  <img 
-                    src={book.image} 
-                    alt={book.title}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-bold">
-                      {book.badge}
-                    </span>
-                  </div>
-                  <div className="absolute top-4 right-4 bg-white/90 px-2 py-1 rounded-full">
-                    <span className="text-yellow-400 text-sm">{book.rating}</span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors">
-                    {book.title}
-                  </h3>
-                  <p className="text-gray-600 mb-3">by {book.author}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xl font-bold text-gray-900">{book.price}</span>
-                      <span className="text-sm text-gray-500 line-through">{book.originalPrice}</span>
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+              <p className="mt-4 text-gray-600">Loading books...</p>
+            </div>
+          ) : popularBooks.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {popularBooks.map((book, index) => (
+                <div 
+                  key={book.id} 
+                  className={`group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 hover:scale-105 ${
+                    isVisible.popular 
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 translate-y-20'
+                  }`}
+                  style={{
+                    transitionDelay: isVisible.popular ? `${index * 150}ms` : '0ms'
+                  }}
+                >
+                  <div className="relative overflow-hidden rounded-t-xl">
+                    <img 
+                      src={book.image_url || "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop"} 
+                      alt={book.title}
+                      className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-bold">
+                        Popular
+                      </span>
                     </div>
-                    <button className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition-all duration-300 transform hover:scale-105">
-                      Add to Cart
-                    </button>
+                    <div className="absolute top-4 right-4 bg-white/90 px-2 py-1 rounded-full">
+                      <span className="text-yellow-400 text-sm">4.8</span>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors">
+                      {book.title}
+                    </h3>
+                    <p className="text-gray-600 mb-3">by {book.author}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xl font-bold text-gray-900">${book.price}</span>
+                        <span className="text-sm text-gray-500 line-through">${(book.price * 1.2).toFixed(2)}</span>
+                      </div>
+                      <button 
+                        onClick={() => handleAddToCart(book.id)}
+                        disabled={cartLoading[book.id]}
+                        className={`bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 ${
+                          cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
+                      >
+                        {cartLoading[book.id] ? 'Adding...' : 'Add to Cart'}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No books available at the moment.</p>
+            </div>
+          )}
           
           <div 
             className={`text-center mt-12 transition-all duration-1000 delay-700 ${
               isVisible.popular ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
-            <button className="bg-gray-800 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              View All Popular Books
-            </button>
+            <Link 
+              to="/catalog" 
+              className="bg-gray-800 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+            >
+              View All Books
+            </Link>
           </div>
         </div>
       </section>
@@ -361,47 +339,59 @@ const KitabCartLanding = () => {
             <p className="text-xl text-gray-600">Top picks that are flying off our shelves</p>
           </div>
           
-          <div className="relative">
-            <div className="flex overflow-x-auto space-x-6 pb-6 scrollbar-hide">
-              {bestSellingBooks.map((book, index) => (
-                <div 
-                  key={book.id} 
-                  className={`flex-none w-64 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 hover:scale-105 ${
-                    isVisible.bestsellers 
-                      ? 'opacity-100 translate-x-0' 
-                      : 'opacity-0 translate-x-20'
-                  }`}
-                  style={{
-                    transitionDelay: isVisible.bestsellers ? `${index * 200}ms` : '0ms'
-                  }}
-                >
-                  <div className="relative overflow-hidden rounded-t-xl">
-                    <img 
-                      src={book.image} 
-                      alt={book.title}
-                      className="w-full h-72 object-cover hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        #{index + 1} Bestseller
-                      </span>
+          {bestSellingBooks.length > 0 ? (
+            <div className="relative">
+              <div className="flex overflow-x-auto space-x-6 pb-6 scrollbar-hide">
+                {bestSellingBooks.map((book, index) => (
+                  <div 
+                    key={book.id} 
+                    className={`flex-none w-64 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 hover:scale-105 ${
+                      isVisible.bestsellers 
+                        ? 'opacity-100 translate-x-0' 
+                        : 'opacity-0 translate-x-20'
+                    }`}
+                    style={{
+                      transitionDelay: isVisible.bestsellers ? `${index * 200}ms` : '0ms'
+                    }}
+                  >
+                    <div className="relative overflow-hidden rounded-t-xl">
+                      <img 
+                        src={book.image_url || "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop"} 
+                        alt={book.title}
+                        className="w-full h-72 object-cover hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                          #{index + 1} Bestseller
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">{book.title}</h3>
+                      <p className="text-gray-600 mb-2">by {book.author}</p>
+                      <p className="text-sm text-green-600 font-medium mb-3">In Stock</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xl font-bold text-gray-900">${book.price}</span>
+                        <button 
+                          onClick={() => handleAddToCart(book.id)}
+                          disabled={cartLoading[book.id]}
+                          className={`bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 ${
+                            cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
+                        >
+                          {cartLoading[book.id] ? 'Adding...' : 'Buy Now'}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">{book.title}</h3>
-                    <p className="text-gray-600 mb-2">by {book.author}</p>
-                    <p className="text-sm text-green-600 font-medium mb-3">{book.sales}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xl font-bold text-gray-900">{book.price}</span>
-                      <button className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105">
-                        Buy Now
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No bestsellers available at the moment.</p>
+            </div>
+          )}
         </div>
       </section>
 
