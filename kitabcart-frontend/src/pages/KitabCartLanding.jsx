@@ -251,17 +251,17 @@ const KitabCartLanding = () => {
           ) : popularBooks.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {popularBooks.map((book, index) => (
-                <div 
-                  key={book.id} 
-                  className={`group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 hover:scale-105 ${
-                    isVisible.popular 
-                      ? 'opacity-100 translate-y-0' 
-                      : 'opacity-0 translate-y-20'
-                  }`}
-                  style={{
-                    transitionDelay: isVisible.popular ? `${index * 150}ms` : '0ms'
-                  }}
-                >
+                                 <div 
+                   key={book.id} 
+                   className={`group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 hover:scale-105 book-card ${
+                     isVisible.popular 
+                       ? 'opacity-100 translate-y-0' 
+                       : 'opacity-0 translate-y-20'
+                   }`}
+                   style={{
+                     transitionDelay: isVisible.popular ? `${index * 150}ms` : '0ms'
+                   }}
+                 >
                   <div className="relative overflow-hidden rounded-t-xl">
                     <img 
                       src={book.image_url || "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop"} 
@@ -277,27 +277,31 @@ const KitabCartLanding = () => {
                       <span className="text-yellow-400 text-sm">4.8</span>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors">
-                      {book.title}
-                    </h3>
-                    <p className="text-gray-600 mb-3">by {book.author}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xl font-bold text-gray-900">${book.price}</span>
-                        <span className="text-sm text-gray-500 line-through">${(book.price * 1.2).toFixed(2)}</span>
-                      </div>
-                      <button 
-                        onClick={() => handleAddToCart(book.id)}
-                        disabled={cartLoading[book.id]}
-                        className={`bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 ${
-                          cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
-                        }`}
-                      >
-                        {cartLoading[book.id] ? 'Adding...' : 'Add to Cart'}
-                      </button>
-                    </div>
-                  </div>
+                                     <div className="p-6 flex flex-col h-full book-content">
+                     <div className="flex-grow">
+                       <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors line-clamp-2">
+                         {book.title}
+                       </h3>
+                       <p className="text-gray-600 mb-3">by {book.author}</p>
+                     </div>
+                     <div className="mt-auto book-actions">
+                       <div className="flex items-center justify-between mb-3">
+                         <div className="flex items-center space-x-2">
+                           <span className="text-xl font-bold text-gray-900">${book.price}</span>
+                           <span className="text-sm text-gray-500 line-through">${(book.price * 1.2).toFixed(2)}</span>
+                         </div>
+                       </div>
+                       <button 
+                         onClick={() => handleAddToCart(book.id)}
+                         disabled={cartLoading[book.id]}
+                         className={`w-full bg-gray-800 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 ${
+                           cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
+                         }`}
+                       >
+                         {cartLoading[book.id] ? 'Adding...' : 'Add to Cart'}
+                       </button>
+                     </div>
+                   </div>
                 </div>
               ))}
             </div>
@@ -366,23 +370,27 @@ const KitabCartLanding = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="p-6">
-                      <h3 className="text-lg font-bold text-gray-900 mb-2">{book.title}</h3>
-                      <p className="text-gray-600 mb-2">by {book.author}</p>
-                      <p className="text-sm text-green-600 font-medium mb-3">In Stock</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xl font-bold text-gray-900">${book.price}</span>
-                        <button 
-                          onClick={() => handleAddToCart(book.id)}
-                          disabled={cartLoading[book.id]}
-                          className={`bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 ${
-                            cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
-                          }`}
-                        >
-                          {cartLoading[book.id] ? 'Adding...' : 'Buy Now'}
-                        </button>
-                      </div>
-                    </div>
+                                         <div className="p-6 flex flex-col h-full">
+                       <div className="flex-grow">
+                         <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">{book.title}</h3>
+                         <p className="text-gray-600 mb-2">by {book.author}</p>
+                         <p className="text-sm text-green-600 font-medium mb-3">In Stock</p>
+                       </div>
+                       <div className="mt-auto">
+                         <div className="flex items-center justify-between mb-3">
+                           <span className="text-xl font-bold text-gray-900">${book.price}</span>
+                         </div>
+                         <button 
+                           onClick={() => handleAddToCart(book.id)}
+                           disabled={cartLoading[book.id]}
+                           className={`w-full bg-red-500 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 ${
+                             cartLoading[book.id] ? 'opacity-50 cursor-not-allowed' : ''
+                           }`}
+                         >
+                           {cartLoading[book.id] ? 'Adding...' : 'Buy Now'}
+                         </button>
+                       </div>
+                     </div>
                   </div>
                 ))}
               </div>
@@ -878,6 +886,31 @@ const KitabCartLanding = () => {
           .parallax-container {
             transform: none !important;
           }
+        }
+
+        /* Line clamp utilities */
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        /* Ensure consistent card heights */
+        .book-card {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+
+        .book-card .book-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .book-card .book-actions {
+          margin-top: auto;
         }
       `}</style>
     </div>
