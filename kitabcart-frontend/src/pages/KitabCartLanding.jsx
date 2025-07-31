@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LatestCollections from '../components/LatestCollections';
 import Reviews from '../components/Reviews';
 import { bookService, cartService } from '../services/api';
 
 const KitabCartLanding = () => {
+  const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState({});
   const [books, setBooks] = useState([]);
@@ -73,6 +74,11 @@ const KitabCartLanding = () => {
     } finally {
       setCartLoading(prev => ({ ...prev, [bookId]: false }));
     }
+  };
+
+  // Handle book click to show details
+  const handleBookClick = (bookId) => {
+    navigate(`/book/${bookId}`);
   };
 
   const features = [
@@ -347,17 +353,17 @@ const KitabCartLanding = () => {
             <div className="relative">
               <div className="flex overflow-x-auto space-x-6 pb-6 scrollbar-hide">
                 {bestSellingBooks.map((book, index) => (
-                  <div 
-                    key={book.id} 
-                    className={`flex-none w-64 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 hover:scale-105 ${
-                      isVisible.bestsellers 
-                        ? 'opacity-100 translate-x-0' 
-                        : 'opacity-0 translate-x-20'
-                    }`}
-                    style={{
-                      transitionDelay: isVisible.bestsellers ? `${index * 200}ms` : '0ms'
-                    }}
-                  >
+                                     <div 
+                     key={book.id} 
+                     className={`flex-none w-64 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 hover:scale-105 book-card ${
+                       isVisible.bestsellers 
+                         ? 'opacity-100 translate-x-0' 
+                         : 'opacity-0 translate-x-20'
+                     }`}
+                     style={{
+                       transitionDelay: isVisible.bestsellers ? `${index * 200}ms` : '0ms'
+                     }}
+                   >
                     <div className="relative overflow-hidden rounded-t-xl">
                       <img 
                         src={book.image_url || "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop"} 
