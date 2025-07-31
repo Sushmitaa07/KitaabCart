@@ -502,7 +502,7 @@ const KitabCartLanding = () => {
               }`}
               style={{transitionDelay: '0ms'}}
             >
-              <div className="text-5xl font-bold mb-2">10,000+</div>
+              <div className="text-5xl font-bold mb-2">{books.length}+</div>
               <div className="text-gray-300 text-lg">Books in Stock</div>
             </div>
             <div 
