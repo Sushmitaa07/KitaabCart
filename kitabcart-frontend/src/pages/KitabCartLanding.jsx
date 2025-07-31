@@ -81,6 +81,11 @@ const KitabCartLanding = () => {
     navigate(`/books/${bookId}`);
   };
 
+  // Handle category click to show books by category
+  const handleCategoryClick = (category) => {
+    navigate(`/books?category=${encodeURIComponent(category)}`);
+  };
+
   const features = [
     {
       icon: (
@@ -170,10 +175,18 @@ const KitabCartLanding = () => {
                   <span className="relative z-10">Start Shopping</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </Link>
-                <button className="group border-3 border-gray-800 text-gray-800 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-800 hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden">
-                  <span className="relative z-10">Explore Collection</span>
-                  <div className="absolute inset-0 bg-gray-800 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-                </button>
+                                 <button 
+                   onClick={() => {
+                     document.getElementById('categories').scrollIntoView({ 
+                       behavior: 'smooth',
+                       block: 'start'
+                     });
+                   }}
+                   className="group border-3 border-gray-800 text-gray-800 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-800 hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden"
+                 >
+                   <span className="relative z-10">Explore Collection</span>
+                   <div className="absolute inset-0 bg-gray-800 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                 </button>
               </div>
 
               {/* Enhanced Stats */}
@@ -490,22 +503,23 @@ const KitabCartLanding = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map((category, index) => (
-              <div 
-                key={index} 
-                className={`bg-white p-4 rounded-lg text-center hover:shadow-md transition-all duration-500 cursor-pointer transform hover:scale-105 hover:-translate-y-1 border-2 border-transparent hover:border-gray-300 ${
-                  isVisible.categories 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-10'
-                }`}
-                style={{
-                  backgroundColor: '#cdcdcd', 
-                  transitionDelay: isVisible.categories ? `${index * 50}ms` : '0ms'
-                }}
-              >
-                <span className="text-gray-800 font-medium hover:text-gray-900 transition-colors">{category}</span>
-              </div>
-            ))}
+                         {categories.map((category, index) => (
+               <div 
+                 key={index} 
+                 onClick={() => handleCategoryClick(category)}
+                 className={`bg-white p-4 rounded-lg text-center hover:shadow-md transition-all duration-500 cursor-pointer transform hover:scale-105 hover:-translate-y-1 border-2 border-transparent hover:border-gray-300 ${
+                   isVisible.categories 
+                     ? 'opacity-100 translate-y-0' 
+                     : 'opacity-0 translate-y-10'
+                 }`}
+                 style={{
+                   backgroundColor: '#cdcdcd', 
+                   transitionDelay: isVisible.categories ? `${index * 50}ms` : '0ms'
+                 }}
+               >
+                 <span className="text-gray-800 font-medium hover:text-gray-900 transition-colors">{category}</span>
+               </div>
+             ))}
           </div>
         </div>
       </section>

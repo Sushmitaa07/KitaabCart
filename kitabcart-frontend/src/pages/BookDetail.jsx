@@ -151,7 +151,7 @@ const BookDetail = () => {
               </div>
               
               <p className="text-3xl font-bold text-gray-900 mb-6">
-                ${parseFloat(book.price || 0).toFixed(2)}
+                Rs. {parseFloat(book.price || 0).toFixed(2)}
               </p>
               
               <div className="border-t border-b border-gray-200 py-6 mb-6">

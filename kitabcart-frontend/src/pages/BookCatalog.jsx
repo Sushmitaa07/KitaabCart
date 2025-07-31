@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { bookService, cartService } from '../services/api';
 import Notification from '../components/Notification';
 
 const BookCatalog = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,12 +44,28 @@ const BookCatalog = () => {
     fetchBooks();
   }, []);
 
+  // Handle URL parameters for category filtering
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl) {
+      setCategoryFilter(categoryFromUrl);
+    }
+  }, [searchParams]);
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
   const handleCategoryChange = (e) => {
-    setCategoryFilter(e.target.value);
+    const newCategory = e.target.value;
+    setCategoryFilter(newCategory);
+    
+    // Update URL parameters
+    if (newCategory === 'all') {
+      setSearchParams({});
+    } else {
+      setSearchParams({ category: newCategory });
+    }
   };
 
   const handleSortChange = (e) => {
@@ -208,7 +225,7 @@ const BookCatalog = () => {
                   <h3 className="font-bold text-gray-800 text-lg mb-1 line-clamp-2">{book.title}</h3>
                   <p className="text-gray-600 text-sm mb-2">{book.author}</p>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-800 font-bold">${parseFloat(book.price || 0).toFixed(2)}</span>
+                    <span className="text-gray-800 font-bold">Rs. {parseFloat(book.price || 0).toFixed(2)}</span>
                     <span className={`px-2 py-1 text-xs rounded-full ${book.stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                       {book.stock > 0 ? 'In Stock' : 'Out of Stock'}
                     </span>
