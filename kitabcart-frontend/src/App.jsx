@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 import KitabCartLanding from './pages/KitabCartLanding';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -19,12 +20,14 @@ import OrderHistory from './pages/OrderHistory';
 function AppContent() {
   return (
     <div className="min-h-screen" style={{backgroundColor: '#cdcdcd'}}>
+      <ScrollToTop />
       <Header />
       <main>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<KitabCartLanding />} />
           <Route path="/login" element={<LoginPage />} />
+          
           <Route path="/signup" element={<SignupPage />} />
           
           {/* Buyer Routes */}
