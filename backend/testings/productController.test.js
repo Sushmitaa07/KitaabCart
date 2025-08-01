@@ -35,8 +35,7 @@ describe("Product Controller", () => {
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining(req.body));
   });
 
-  it
-  ("should return all products", async () => {
+  it("should return all products", async () => {
     const req = {};
     const res = mockResponse();
     Product.findAll.mockResolvedValue([{ id: 1, productName: "Test Product" }]);
